@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using FRRobot;
@@ -17,6 +18,17 @@ namespace PLCRobotIOInterface
 
         public static FRCRobot robot;
         public static FRCRobotErrorInfo robotErrorInfo;
+        public static FRCIOConfigs ioConfigs;
+        public static FRCIOConfig ioConfig;
+        public static FRCIOTypes ioTypes;
+        public static FRCIOType ioType;
+        public static FRCIOSignals ioSignals;
+        public static FRCIOSignal ioSignal;
+        public static FRCAnalogIOType aioType;
+        public static FRCAnalogIOSignal aioSignal;
+        public static FRCUserIOType userioType;
+        public static FRCDigitalIOType dioType;
+        public static FRCDigitalIOSignal dioSignal;
 
         public static string sHostname = string.Empty;
         public static bool bShowDebug = false;
@@ -77,6 +89,7 @@ namespace PLCRobotIOInterface
             if (!rIPAddress.Match(sHostname).Success && !rHostname.Match(sHostname).Success)
             {
                 WriteErrorMessage("The hostname/IP address provided is not valid.");
+                ShowHelpMessage(optionSet);
                 ShowExitMessage();
                 return;
             }
@@ -91,18 +104,28 @@ namespace PLCRobotIOInterface
 
                 WriteDebugMessage("Attempting to connect to the robot at the hostname/IP address.");
                 robot.Connect(sHostname);
-
-                WriteDebugMessage("Checking for potential robot error info.");
-                robotErrorInfo = robot.GetErrorInfo();
-                WriteRobotErrorMessage(robotErrorInfo.Description);
             }
             catch (Exception e)
             {
                 WriteErrorMessage(e.Message);
             }
 
-           ShowExitMessage();
+            if (robot.IsConnected)
+            {
+                WriteDebugMessage("Sucessfully connected to robot at {0}.", sHostname);
+            }
+
+            robot.RegPositions.Refresh();
+            robot.SysVariables.Refresh();
+
+            WriteDebugMessage("Robot Time: {0}", robot.SysInfo.Clock.ToLongTimeString());
+
+            ioType = robot.IOTypes[FREIOTypeConstants.frDOutType, 0];
+            ioTypes.Add(ioType);
+
+            ShowExitMessage();
         }
+
 
         static void ShowTitleMessage()
         {
@@ -110,7 +133,7 @@ namespace PLCRobotIOInterface
             Console.WriteLine();
             Console.WriteLine("PLC Robot I/O Interface");
             Console.WriteLine("By: Brandon Jutras");
-            Console.WriteLine("Latest Build Date: " + sLatestBuildNumber + " " + dtLatestBuild.ToShortDateString());
+            Console.WriteLine("Latest Build Date: {0} {1}", sLatestBuildNumber, dtLatestBuild.ToShortDateString());
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
         }
@@ -169,22 +192,19 @@ namespace PLCRobotIOInterface
         /// <param name="args">Optional object arguments to be formatted into the output string.</param>
         static void WriteErrorMessage(string format, params object[] args)
         {
-            if (bShowDebug)
+            try
             {
-                try
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.Write("ERROR: ");
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write(string.Format(format, args) + "\n");
-                }
-                catch (Exception e)
-                {
-                    // Worst case scenario: bad string format. Try parsing format as literal string.
-                    Console.Write(format.ToString() + "\n");
-                }
                 Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("ERROR: ");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.Write(string.Format(format, args) + "\n");
             }
+            catch (Exception e)
+            {
+                // Worst case scenario: bad string format. Try parsing format as literal string.
+                Console.Write(format.ToString() + "\n");
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         /// <summary>
@@ -194,21 +214,19 @@ namespace PLCRobotIOInterface
         /// <param name="args">Optional object arguments to be formatted into the output string.</param>
         static void WriteRobotErrorMessage(string format, params object[] args)
         {
-            if (bShowDebug)
+            try
             {
-                try
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.Write("ROBOT ERROR: ");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(string.Format(format, args) + "\n");
-                }
-                catch (Exception e)
-                {
-                    // Worst case scenario: bad string format. Try parsing format as literal string.
-                    Console.Write(format.ToString() + "\n");
-                }
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("ROBOT ERROR: ");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(string.Format(format, args) + "\n");
             }
+            catch (Exception e)
+            {
+                // Worst case scenario: bad string format. Try parsing format as literal string.
+                Console.Write(format.ToString() + "\n");
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
 }

@@ -57,7 +57,7 @@
     <COMReference Include="FRRobot">
       <Guid>{6C779F21-4383-11D0-8901-0020AF68F0A3}</Guid>
       <VersionMajor>1</VersionMajor>
-      <VersionMinor>5</VersionMinor>
+      <VersionMinor>4</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
