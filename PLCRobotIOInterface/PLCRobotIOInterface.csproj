@@ -36,6 +36,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AddressTableLib">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Common Files\Schneider Electric Shared\Schneider Electric Modbus Communication DTM Library\Modbus TCP CommDTM\AddressTableLib.dll</HintPath>
+    </Reference>
     <Reference Include="ModbusTCPScan">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Common Files\Schneider Electric Shared\Schneider Electric Modbus Communication DTM Library\Modbus TCP CommDTM\ModbusTCPScan.dll</HintPath>
     </Reference>
@@ -50,6 +53,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="ToolLib">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Common Files\Schneider Electric Shared\Schneider Electric Modbus Communication DTM Library\Modbus TCP CommDTM\ToolLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -65,6 +71,24 @@
       <Guid>{6C779F21-4383-11D0-8901-0020AF68F0A3}</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="MBTCPCOMMDTMLib">
+      <Guid>{BAAF8689-D0C7-40C8-B3E5-24C0DCA86F30}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="MBTCP_InterfacesLib">
+      <Guid>{2A0357C0-2ECF-406E-B00A-F0ACF0EDB9F9}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
